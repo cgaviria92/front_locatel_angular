@@ -29,7 +29,7 @@ export class CabeceraVentasComponent implements OnInit {
   ) {
     this.cabeceraVentaForm = this.fb.group({
       consecutivo: [''],
-      fecha: ['', Validators.required],
+      fecha: [this.getCurrentDate(), Validators.required],
       cliente: ['', Validators.required],
       total_venta: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
       detalles: this.fb.array([this.createDetalleFormGroup()])
@@ -72,6 +72,14 @@ export class CabeceraVentasComponent implements OnInit {
       }
     });
   }
+  // Fecha actual fijada.
+  getCurrentDate(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 
   get detalles(): FormArray {
     return this.cabeceraVentaForm.get('detalles') as FormArray;
@@ -108,7 +116,7 @@ export class CabeceraVentasComponent implements OnInit {
         next: (cabeceraVenta) => {
           this.cabecerasVentas.push(cabeceraVenta);
           this.mapClientNames();
-          this.cabeceraVentaForm.reset();
+          this.cabeceraVentaForm.reset({ fecha: this.getCurrentDate() });
           this.detalles.clear();
           this.addDetalle(); 
           this.filtrarCabeceras();
