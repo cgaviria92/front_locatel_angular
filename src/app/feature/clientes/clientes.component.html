@@ -1,0 +1,68 @@
+<div class="clientes-container">
+  <h2>Crear Nuevo Cliente</h2>
+  <form [formGroup]="clienteForm" (ngSubmit)="createCliente()">
+    <div class="form-group">
+      <label for="cedula">Cédula</label>
+      <input type="text" id="cedula" formControlName="cedula" />
+      <div *ngIf="clienteForm.get('cedula')?.invalid && (clienteForm.get('cedula')?.dirty || clienteForm.get('cedula')?.touched)">
+        <div *ngIf="clienteForm.get('cedula')?.errors?.['required']">Cedula es requerida.</div>
+        <div *ngIf="clienteForm.get('cedula')?.errors?.['pattern']">Cedula debe ser un numero.</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input type="text" id="nombre" formControlName="nombre" />
+      <div *ngIf="clienteForm.get('nombre')?.invalid && (clienteForm.get('nombre')?.dirty || clienteForm.get('nombre')?.touched)">
+        <div *ngIf="clienteForm.get('nombre')?.errors?.['required']">Nombre es requerido.</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="direccion">Direccion</label>
+      <input type="text" id="direccion" formControlName="direccion" />
+      <div *ngIf="clienteForm.get('direccion')?.invalid && (clienteForm.get('direccion')?.dirty || clienteForm.get('direccion')?.touched)">
+        <div *ngIf="clienteForm.get('direccion')?.errors?.['required']">Direccion es requerida.</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input type="text" id="telefono" formControlName="telefono" />
+      <div *ngIf="clienteForm.get('telefono')?.invalid && (clienteForm.get('telefono')?.dirty || clienteForm.get('telefono')?.touched)">
+        <div *ngIf="clienteForm.get('telefono')?.errors?.['required']">Telefono es requerido.</div>
+        <div *ngIf="clienteForm.get('telefono')?.errors?.['pattern']">Telefono debe ser un numero.</div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" formControlName="email" />
+      <div *ngIf="clienteForm.get('email')?.invalid && (clienteForm.get('email')?.dirty || clienteForm.get('email')?.touched)">
+        <div *ngIf="clienteForm.get('email')?.errors?.['required']">Email es requerido.</div>
+        <div *ngIf="clienteForm.get('email')?.errors?.['email']">Email debe ser valido.</div>
+      </div>
+    </div>
+    <button type="submit" [disabled]="clienteForm.invalid">Crear Cliente</button>
+  </form>
+  
+  <h2>Lista de Clientes</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Cédula</th>
+        <th>Nombre</th>
+        <th>Direccion</th>
+        <th>Teléfono</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let cliente of clientes">
+        <td>{{ cliente.cedula }}</td>
+        <td>{{ cliente.nombre }}</td>
+        <td>{{ cliente.direccion }}</td>
+        <td>{{ cliente.telefono }}</td>
+        <td>{{ cliente.email }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>

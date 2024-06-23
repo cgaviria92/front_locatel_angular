@@ -1,0 +1,73 @@
+<div class="productos-container">
+    <h2>Crear Nuevo Producto</h2>
+    <form [formGroup]="productoForm" (ngSubmit)="createProducto()">
+        <div class="form-group">
+            <label for="codigo">Código</label>
+            <input type="text" id="codigo" formControlName="codigo" />
+            <div
+                *ngIf="productoForm.get('codigo')?.invalid && (productoForm.get('codigo')?.dirty || productoForm.get('codigo')?.touched)">
+                <div *ngIf="productoForm.get('codigo')?.errors?.['required']">Codigo es requerido.</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input type="text" id="nombre" formControlName="nombre" />
+            <div
+                *ngIf="productoForm.get('nombre')?.invalid && (productoForm.get('nombre')?.dirty || productoForm.get('nombre')?.touched)">
+                <div *ngIf="productoForm.get('nombre')?.errors?.['required']">Nombre es requerido.</div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="valor_venta">Valor Venta</label>
+            <input type="text" id="valor_venta" formControlName="valor_venta" />
+            <div
+                *ngIf="productoForm.get('valor_venta')?.invalid && (productoForm.get('valor_venta')?.dirty || productoForm.get('valor_venta')?.touched)">
+                <div *ngIf="productoForm.get('valor_venta')?.errors?.['required']">Valor Venta es requerido.</div>
+                <div *ngIf="productoForm.get('valor_venta')?.errors?.['pattern']">Valor Venta debe ser un numero valido.
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="maneja_iva">Maneja IVA</label>
+            <input type="checkbox" id="maneja_iva" formControlName="maneja_iva" />
+        </div>
+        <div class="form-group">
+            <label for="porcentaje_iva">Porcentaje IVA</label>
+            <input type="text" id="porcentaje_iva" formControlName="porcentaje_iva" />
+            <div
+                *ngIf="productoForm.get('porcentaje_iva')?.invalid && (productoForm.get('porcentaje_iva')?.dirty || productoForm.get('porcentaje_iva')?.touched)">
+                <div *ngIf="productoForm.get('porcentaje_iva')?.errors?.['required']">Porcentaje IVA es requerido.</div>
+                <div *ngIf="productoForm.get('porcentaje_iva')?.errors?.['pattern']">Porcentaje IVA debe ser un numero
+                    valido.</div>
+                <div *ngIf="productoForm.get('porcentaje_iva')?.errors?.['max']">Porcentaje IVA no puede ser mayor a 20.
+                </div>
+                <div *ngIf="productoForm.get('porcentaje_iva')?.errors?.['min']">Porcentaje IVA no puede ser cero.</div>
+            </div>
+        </div>
+        <button type="submit" [disabled]="productoForm.invalid">Crear Producto</button>
+    </form>
+
+    <h2>Lista de Productos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Valor Venta</th>
+                <th>Maneja IVA</th>
+                <th>Porcentaje IVA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let producto of productos">
+                <td>{{ producto.codigo }}</td>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.valor_venta }}</td>
+                <td>{{ producto.maneja_iva ? 'Si' : 'No' }}</td>
+                <td>{{ producto.porcentaje_iva }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+</div>

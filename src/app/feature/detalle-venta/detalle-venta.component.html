@@ -1,0 +1,57 @@
+<div class="detalle-venta-container">
+    <h2>Registrar Nuevo Detalle de Venta</h2>
+    <form [formGroup]="detalleVentaForm" (ngSubmit)="createDetalleVenta()">
+      <div class="form-group">
+        <label for="cabecera_venta">Cabecera de Venta</label>
+        <select id="cabecera_venta" formControlName="cabecera_venta">
+          <option *ngFor="let cabecera of cabecerasVentas" [value]="cabecera.id">{{ cabecera.consecutivo }}</option>
+        </select>
+        <div *ngIf="detalleVentaForm.get('cabecera_venta')?.invalid && (detalleVentaForm.get('cabecera_venta')?.dirty || detalleVentaForm.get('cabecera_venta')?.touched)">
+          <div *ngIf="detalleVentaForm.get('cabecera_venta')?.errors?.['required']">Cabecera de Venta es requerida.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="producto">Producto</label>
+        <select id="producto" formControlName="producto">
+          <option *ngFor="let producto of productos" [value]="producto.id">{{ producto.nombre }}</option>
+        </select>
+        <div *ngIf="detalleVentaForm.get('producto')?.invalid && (detalleVentaForm.get('producto')?.dirty || detalleVentaForm.get('producto')?.touched)">
+          <div *ngIf="detalleVentaForm.get('producto')?.errors?.['required']">Producto es requerido.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="valor_producto">Valor Producto</label>
+        <input type="text" id="valor_producto" formControlName="valor_producto" />
+        <div *ngIf="detalleVentaForm.get('valor_producto')?.invalid && (detalleVentaForm.get('valor_producto')?.dirty || detalleVentaForm.get('valor_producto')?.touched)">
+          <div *ngIf="detalleVentaForm.get('valor_producto')?.errors?.['required']">Valor Producto es requerido.</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="iva_calculado">IVA Calculado</label>
+        <input type="text" id="iva_calculado" formControlName="iva_calculado" />
+        <div *ngIf="detalleVentaForm.get('iva_calculado')?.invalid && (detalleVentaForm.get('iva_calculado')?.dirty || detalleVentaForm.get('iva_calculado')?.touched)">
+          <div *ngIf="detalleVentaForm.get('iva_calculado')?.errors?.['required']">IVA Calculado es requerido.</div>
+        </div>
+      </div>
+      <button type="submit" [disabled]="detalleVentaForm.invalid">Registrar Detalle Venta</button>
+    </form>
+    
+    <h2>Lista de Detalles de Venta</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Valor Producto</th>
+          <th>IVA Calculado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detalle of detallesVentas">
+          <td>{{ detalle.productoNombre }}</td>
+          <td>{{ detalle.valor_producto }}</td>
+          <td>{{ detalle.iva_calculado }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  

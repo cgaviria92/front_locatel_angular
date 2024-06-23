@@ -1,0 +1,9 @@
+<nav class="navbar" *ngIf="isLoggedIn">
+  <a routerLink="/home" (click)="navigateTo('/home')">Home</a>
+  <a routerLink="/clientes" (click)="navigateTo('/clientes')">Clientes</a>
+  <a routerLink="/productos" (click)="navigateTo('/productos')">Productos</a>
+  <a routerLink="/cabecera-ventas" (click)="navigateTo('/cabecera-ventas')">Cabecera Ventas</a>
+  <a routerLink="/detalle-venta" (click)="navigateTo('/detalle-venta')">Detalle Venta</a>
+  <a (click)="logout()">Logout</a>
+</nav>
+
