@@ -31,7 +31,7 @@ export class CabeceraVentasComponent implements OnInit {
       consecutivo: [''],
       fecha: [this.getCurrentDate(), Validators.required],
       cliente: ['', Validators.required],
-      total_venta: ['', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+      total_venta: [{ value: '', disabled: true }, Validators.required],
       detalles: this.fb.array([this.createDetalleFormGroup()])
     });
 
@@ -86,11 +86,19 @@ export class CabeceraVentasComponent implements OnInit {
   }
 
   createDetalleFormGroup(): FormGroup {
-    return this.fb.group({
+    const detalleFormGroup = this.fb.group({
       producto: ['', Validators.required],
-      valor_producto: ['', Validators.required],
-      iva_calculado: ['', Validators.required]
+      valor_producto: [{ value: '', disabled: true }, Validators.required],
+      iva_calculado: [{ value: '', disabled: true }, Validators.required]
     });
+
+    detalleFormGroup.get('producto')?.valueChanges.subscribe(value => {
+      if (value) {
+        this.updateProducto(detalleFormGroup, +value); // Convertimos el valor a número por que llega como str
+      }
+    });
+
+    return detalleFormGroup;
   }
 
   addDetalle() {
@@ -99,11 +107,42 @@ export class CabeceraVentasComponent implements OnInit {
 
   removeDetalle(index: number) {
     this.detalles.removeAt(index);
+    this.updateTotalVenta();
+  }
+
+  updateProducto(detalle: FormGroup, productoId: number) {
+    const producto = this.productos.find(p => p.id === productoId);
+
+    if (producto) {
+      console.log("imprimo el producto", producto);
+      const valorProducto = parseFloat(producto.valor_venta); // Aseguramos que sea un número
+      const porcentajeIva = parseFloat(producto.porcentaje_iva) / 100; //se convierte a porcentaje
+      const ivaCalculado = valorProducto * porcentajeIva; // Usamos el porcentaje_iva del producto para multiplicarlo y sacar el %
+      console.log("ivaCalculado", ivaCalculado);
+      console.log("valorProducto", valorProducto);
+
+      detalle.patchValue({
+        valor_producto: valorProducto.toFixed(2), // Formateamos a 2 decimales
+        iva_calculado: ivaCalculado.toFixed(2) // Formateamos a 2 decimales
+      });
+
+      this.updateTotalVenta();
+    }
+  }
+
+  updateTotalVenta() {
+    let total = 0;
+    this.detalles.controls.forEach(detalle => {
+      const valorProducto = parseFloat(detalle.get('valor_producto')?.value) || 0;
+      const ivaCalculado = parseFloat(detalle.get('iva_calculado')?.value) || 0;
+      total += valorProducto + ivaCalculado;
+    });
+    this.cabeceraVentaForm.get('total_venta')?.setValue(total.toFixed(2));
   }
 
   createCabeceraVenta() {
     if (this.cabeceraVentaForm.valid) {
-      const ventaData = this.cabeceraVentaForm.value;
+      const ventaData = this.cabeceraVentaForm.getRawValue();
       ventaData.detalles.forEach((detalle: any) => {
         detalle.producto = parseInt(detalle.producto, 10);
         detalle.valor_producto = detalle.valor_producto.toString();
@@ -116,9 +155,9 @@ export class CabeceraVentasComponent implements OnInit {
         next: (cabeceraVenta) => {
           this.cabecerasVentas.push(cabeceraVenta);
           this.mapClientNames();
-          this.cabeceraVentaForm.reset({ fecha: this.getCurrentDate() });
+          this.cabeceraVentaForm.reset({ fecha: this.getCurrentDate(), total_venta: '' });
           this.detalles.clear();
-          this.addDetalle(); 
+          this.addDetalle();
           this.filtrarCabeceras();
         },
         error: (error) => {
